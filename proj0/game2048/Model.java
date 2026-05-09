@@ -110,15 +110,67 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
+        board.setViewingPerspective(side);
+        MergeResult m = performMerges(board);
+        board.setViewingPerspective(Side.NORTH);
+        score += m.s;
+        changed = m.c;
 
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    private static class MergeResult {
+        public int s;
+        public boolean c;
+
+        public MergeResult(){
+            s = 0;
+            c = false;
+        }
+    }
+
+    /** performs merge operation in NORTH direction, returns score and changed */
+    private static MergeResult performMerges(Board b) {
+        int tiltScore = 0;
+        MergeResult r = new MergeResult();
+        int size = b.size();
+
+        for(int col = 0;col < size; col++){
+            int top = size - 1;
+            int bottom = top - 1;
+            while(bottom >= 0 && top > bottom){
+                Tile t2 = b.tile(col, bottom);
+                if(t2 != null){
+                   if(canMove(b, col, top, t2)){
+                        r.c = true;
+                        boolean wasMerge = b.move(col, top, t2);
+                        if(wasMerge) {
+                            tiltScore += b.tile(col,top).value();
+                            top--;
+                        }
+                   } else {
+                       top--;
+                       if(top == bottom){
+                           bottom--; // avoid merging same tile.
+                       }
+                       continue;
+                   }
+                }
+                bottom--;
+            }
+        }
+        r.s = tiltScore;
+        return r;
+    }
+
+    /** Returns if tile can be moved to given co-ordinates */
+    private static boolean canMove(Board b, int col, int row, Tile t2) {
+        Tile t = b.tile(col, row);
+        return t == null || (t.value() == t2.value());
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -195,17 +247,17 @@ public class Model extends Observable {
     /** Returns if tile can merge with either tile in next row or tile in next column */
     public static boolean canMergeNext(Board b,int col,int row){
         Tile currentTile = b.tile(col,row);
-        if(isValidCord(b,col,(row+1))){
-           if(b.tile(col,(row+1)) != null){
-               Tile nextTile = b.tile(col,(row+1));
+        if(isValidCord(b,(col+1),row)){
+           if(b.tile((col+1),row) != null){
+               Tile nextTile = b.tile((col+1),row);
                if(currentTile.value() == nextTile.value()){
                    return true;
                }
            }
         }
-        if(isValidCord(b,(col+1),row)){
-            if(b.tile((col+1),row) != null){
-                Tile nextTile = b.tile((col+1),row);
+        if(isValidCord(b,col,(row+1))){
+            if(b.tile(col,(row+1)) != null){
+                Tile nextTile = b.tile(col,(row+1));
                 if(currentTile.value() == nextTile.value()){
                     return true;
                 }
