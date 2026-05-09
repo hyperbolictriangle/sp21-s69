@@ -2,7 +2,6 @@ package game2048;
 
 import java.util.Formatter;
 import java.util.Observable;
-import java.util.Optional;
 
 
 /** The state of a game of 2048.
@@ -141,7 +140,7 @@ public class Model extends Observable {
         int boardSize = b.size();
         for(int row=0; row < boardSize; row++){
             for(int col=0; col < boardSize; col++){
-                if(b.tile(row,col) == null ){
+                if(b.tile(col,row) == null ){
                     return true;
                 }
             }
@@ -158,7 +157,7 @@ public class Model extends Observable {
         int boardSize = b.size();
         for(int row=0; row < boardSize; row++) {
             for(int col = 0; col < boardSize; col++) {
-                Tile currentTile = b.tile(row, col);
+                Tile currentTile = b.tile(col, row);
                 if (currentTile != null && currentTile.value() == MAX_PIECE) {
                     return true;
                 }
@@ -174,10 +173,51 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        return emptySpaceExists(b) || tileMergeExists(b);
+    }
+
+    /**
+     * Returns true if any two neighbouring tiles can be merged in current board state.
+     * @param b - Board
+     * @return boolean - if a tile merge operation exists */
+    public static boolean tileMergeExists(Board b){
+        int size = b.size();
+        for(int row = 0; row < size; row++){
+            for(int col = 0; col < size; col++){
+                if(b.tile(col,row) != null && canMergeNext(b,col,row)){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
+    /** Returns if tile can merge with either tile in next row or tile in next column */
+    public static boolean canMergeNext(Board b,int col,int row){
+        Tile currentTile = b.tile(col,row);
+        if(isValidCord(b,col,(row+1))){
+           if(b.tile(col,(row+1)) != null){
+               Tile nextTile = b.tile(col,(row+1));
+               if(currentTile.value() == nextTile.value()){
+                   return true;
+               }
+           }
+        }
+        if(isValidCord(b,(col+1),row)){
+            if(b.tile((col+1),row) != null){
+                Tile nextTile = b.tile((col+1),row);
+                if(currentTile.value() == nextTile.value()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Returns if co-ordinates are valid for current board. */
+    public static boolean isValidCord(Board b, int col, int row){
+        return (row >= 0) && (row < b.size()) && (col >=0) && (col < b.size());
+    }
 
     @Override
      /** Returns the model as a string, used for debugging. */
