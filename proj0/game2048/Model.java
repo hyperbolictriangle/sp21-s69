@@ -2,10 +2,11 @@ package game2048;
 
 import java.util.Formatter;
 import java.util.Observable;
+import java.util.Optional;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author HyperbolicTriangle
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -137,7 +138,14 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        int boardSize = b.size();
+        for(int row=0; row < boardSize; row++){
+            for(int col=0; col < boardSize; col++){
+                if(b.tile(row,col) == null ){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
