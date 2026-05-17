@@ -26,7 +26,7 @@ public class ArrayDeque<T> {
 
     public void addLast(T i) {
         if(size == capacity){
-           // implement resize later
+            resize();
         }
         deque[nextLast] = i;
         nextLast = (nextLast + 1) % capacity;
@@ -40,11 +40,17 @@ public class ArrayDeque<T> {
         nextLast = ((nextLast - 1) % capacity + capacity) % capacity;
         T v = deque[nextLast];
         deque[nextLast] = null;
-        size--;
+        size -= 1;
+        if(size <= capacity / (resizeFactor * resizeFactor)) {
+            resize();
+        }
         return v;
     }
 
     public T get(int ind) {
+        if(ind < 0 || ind >= size) {
+            return null;
+        }
         return deque[translateIndex(ind)];
     }
 
@@ -55,14 +61,14 @@ public class ArrayDeque<T> {
 
     public void printDeque(){
         for(int i=0; i < size; i++){
-           System.out.print(deque[i] + " ");
+           System.out.print(deque[translateIndex(i)] + " ");
         }
         System.out.println();
     }
 
     public void addFirst(T i) {
         if(size == capacity) {
-            // implement resize later on
+            resize();
         }
         deque[nextFirst] = i;
         nextFirst = ((nextFirst - 1) % capacity + capacity ) % capacity;
@@ -77,13 +83,31 @@ public class ArrayDeque<T> {
         T v = deque[nextFirst];
         deque[nextFirst] = null;
         size -= 1;
+        if(size <= capacity / (resizeFactor * resizeFactor)) {
+            resize();
+        }
         return v;
     }
 
     /* reimplement this */
-    private void resize(int newCapacity) {
+    private void resize() {
+        int newCapacity;
+        if(size == capacity) {
+            newCapacity = capacity * resizeFactor;
+        } else {
+            newCapacity = capacity / resizeFactor;
+        }
         T[] temp = (T[])new Object[newCapacity];
-        System.arraycopy(deque, 0, temp, 0, size);
+        arrayCopy(temp);
         deque = temp;
+        capacity = newCapacity;
+        nextFirst = capacity - 1;
+        nextLast = size;
+    }
+
+    private void arrayCopy(T[] temp) {
+        for(int i=0; i < size; i++) {
+            temp[i] = get(i);
+        }
     }
 }

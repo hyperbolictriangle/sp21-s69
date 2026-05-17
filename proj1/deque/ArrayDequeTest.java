@@ -139,4 +139,20 @@ public class ArrayDequeTest {
             assertEquals(errorMsg, expected[i], v);
         }
     }
+    @Test
+    /* Check if we can get element at index i from deque for larger test cases. */
+    public void getIndexTestLarge(){
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+
+        for(int i = 0; i < 100000; i++){
+            lld1.addLast(i);
+        }
+        for(int i = 0; i < 8; i++){
+            int v = lld1.get(i);
+            String errorMsg = "Incorrect value returned at index " + i + "\n";
+            errorMsg += " get(" + i + ") value returned: " + v + "\n";
+            errorMsg += " expected value: " + i + "\n";
+            assertEquals(errorMsg, i, v);
+        }
+    }
 }
