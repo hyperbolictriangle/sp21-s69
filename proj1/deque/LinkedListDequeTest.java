@@ -1,11 +1,7 @@
 package deque;
 
 import org.junit.Test;
-
-import java.util.Iterator;
-
 import static org.junit.Assert.*;
-
 
 /** Performs some basic linked list tests. */
 public class LinkedListDequeTest {
