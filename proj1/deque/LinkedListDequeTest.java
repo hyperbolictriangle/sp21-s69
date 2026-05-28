@@ -1,6 +1,9 @@
 package deque;
 
 import org.junit.Test;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 
@@ -133,5 +136,101 @@ public class LinkedListDequeTest {
             errorMsg += " expected value: " + i + "\n";
             assertEquals(errorMsg, i, v);
         }
+    }
+
+    @Test
+    /* Check if we can get element at index i from deque. */
+    public void recursiveGetIndexTest(){
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+
+        for(int i = 0; i < 1000; i++){
+            lld1.addLast(i);
+        }
+        for(int i = 0; i < 1000; i++){
+            int v = lld1.getRecursive(i);
+            String errorMsg = "Incorrect value returned at index " + i + "\n";
+            errorMsg += " get(" + i + ") value returned: " + v + "\n";
+            errorMsg += " expected value: " + i + "\n";
+            assertEquals(errorMsg, i, v);
+        }
+    }
+
+    @Test
+    /* Check if equals function returns true for same address object. */
+    public void equalsItselfTest() {
+        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        lld.addLast(3);
+
+        assertTrue("Should return true when deque compared with itself", lld.equals(lld));
+    }
+
+    @Test
+    /* Check if deque equals another deque based on their contents. */
+    public void equalsTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+        LinkedListDeque<String> lld3 = new LinkedListDeque<>();
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+        for(int i=0; i<100000; i++){
+            lld1.addLast(i);
+            lld2.addLast(i);
+            ad.addLast(i);
+            lld3.addLast(Integer.toString(i));
+        }
+        assertTrue("Should return true when equals is called on another Deque with same contents.", lld1.equals(lld2));
+        lld2.removeLast();
+        assertTrue("Should return true when equals is called on " +
+                "types implementing Deque interface.", lld1.equals(ad));
+        assertFalse("Should return false when equals is called on LinkedListDeque type object containing " +
+                " different type of data.", lld1.equals(lld3));
+        assertFalse("Should return false when equals is called on another Deque with different contents.", lld1.equals(lld2));
+    }
+
+    @Test
+    /* Check if deque equals another deque based on their contents. */
+    public void dogDequeEqualsTest() {
+        LinkedListDeque<TestDog> lld1 = new LinkedListDeque<>();
+        LinkedListDeque<TestDog> lld2= new LinkedListDeque<>();
+        for(int i=0; i<100000; i++){
+            lld1.addLast(new TestDog("Test1", i));
+            lld2.addLast(new TestDog("Test2", i));
+        }
+        assertTrue("Should return true when equals is called on another Deque with same contents.", lld1.equals(lld2));
+        lld2.removeLast();
+        assertFalse("Should return false when equals is called on another Deque with different contents.", lld1.equals(lld2));
+    }
+
+    /** Private class for testing LinkedListDeque.equals implementation. */
+    private static class TestDog {
+        public String name;
+        public int age;
+
+        public TestDog(String n, int a) {
+            name = n;
+            age = a;
+        }
+
+        @Override
+        public boolean equals(Object d){
+            if(d instanceof TestDog) {
+                return this.age == ((TestDog) d).age;
+            }
+            return false;
+        }
+    }
+
+    @Test
+    /* Test iterator implementation */
+    public void iteratorTest() {
+        LinkedListDeque<String> sad = new LinkedListDeque<>();
+        for (int i=0; i < 26; i++) {
+            sad.addLast(Integer.toString(i));
+        }
+
+        for (String s: sad) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+        sad.printDeque();
     }
 }
