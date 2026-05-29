@@ -5,16 +5,16 @@ import edu.princeton.cs.algs4.StdDraw;
 
 
 public class GuitarHero {
-    public final String KEYBOARD = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
-    public int keyboard_length;
-    public GuitarString[] strings;
+    private final String KEYBOARD = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
+    private int keyboardLength;
+    private GuitarString[] strings;
 
     public GuitarHero() {
-        keyboard_length = KEYBOARD.length();
-        strings = new GuitarString[keyboard_length];
-        for (int i = 0; i < keyboard_length; i++) {
-            double string_freq = 440 * Math.pow(2.0, (double) (i - 24) / 12);
-            strings[i] = new GuitarString(string_freq);
+        keyboardLength = KEYBOARD.length();
+        strings = new GuitarString[keyboardLength];
+        for (int i = 0; i < keyboardLength; i++) {
+            double stringFreq = 440 * Math.pow(2.0, (double) (i - 24) / 12);
+            strings[i] = new GuitarString(stringFreq);
         }
     }
 
