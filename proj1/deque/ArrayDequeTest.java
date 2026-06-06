@@ -1,10 +1,14 @@
 package deque;
 
 import org.junit.Test;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
+
 /** Performs some basic linked list tests. */
-public class LinkedListDequeTest {
+public class ArrayDequeTest {
 
     @Test
     /** Adds a few things to the list, checking isEmpty() and size() are correct,
@@ -13,7 +17,7 @@ public class LinkedListDequeTest {
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
 		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
 		lld1.addFirst("front");
@@ -37,7 +41,7 @@ public class LinkedListDequeTest {
     /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
     public void addRemoveTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 		// should be empty
 		assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -54,7 +58,7 @@ public class LinkedListDequeTest {
     /* Tests removing from an empty deque */
     public void removeEmptyTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -71,12 +75,12 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Check if you can create LinkedListDeques with different parameterized types*/
+    /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
 
-        LinkedListDeque<String>  lld1 = new LinkedListDeque<String>();
-        LinkedListDeque<Double>  lld2 = new LinkedListDeque<Double>();
-        LinkedListDeque<Boolean> lld3 = new LinkedListDeque<Boolean>();
+        ArrayDeque<String>  lld1 = new ArrayDeque<String>();
+        ArrayDeque<Double>  lld2 = new ArrayDeque<Double>();
+        ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -88,10 +92,10 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty LinkedListDeque. */
+    /* check if null is return when removing from an empty ArrayDeque. */
     public void emptyNullReturnTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque lld1 = new ArrayDeque<Integer>();
 
         boolean passed1 = false;
         boolean passed2 = false;
@@ -103,7 +107,7 @@ public class LinkedListDequeTest {
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         for (int i = 0; i < 1000000; i++) {
             lld1.addLast(i);
         }
@@ -120,30 +124,34 @@ public class LinkedListDequeTest {
     @Test
     /* Check if we can get element at index i from deque. */
     public void getIndexTest(){
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        int[] expected = new int[]{ 4, 3, 2, 1, 0, 5, 6, 7};
 
-        for(int i = 0; i < 1000; i++){
+        for(int i = 0; i < 5; i++){
+            lld1.addFirst(i);
+        }
+        for(int i=5; i < 8; i++){
             lld1.addLast(i);
         }
-        for(int i = 0; i < 1000; i++){
+        lld1.printDeque();
+        for(int i = 0; i < 8; i++){
             int v = lld1.get(i);
             String errorMsg = "Incorrect value returned at index " + i + "\n";
             errorMsg += " get(" + i + ") value returned: " + v + "\n";
-            errorMsg += " expected value: " + i + "\n";
-            assertEquals(errorMsg, i, v);
+            errorMsg += " expected value: " + expected[i] + "\n";
+            assertEquals(errorMsg, expected[i], v);
         }
     }
-
     @Test
-    /* Check if we can get element at index i from deque. */
-    public void recursiveGetIndexTest(){
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+    /* Check if we can get element at index i from deque for larger test cases. */
+    public void getIndexTestLarge(){
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
-        for(int i = 0; i < 1000; i++){
+        for(int i = 0; i < 100000; i++){
             lld1.addLast(i);
         }
-        for(int i = 0; i < 1000; i++){
-            int v = lld1.getRecursive(i);
+        for(int i = 0; i < 8; i++){
+            int v = lld1.get(i);
             String errorMsg = "Incorrect value returned at index " + i + "\n";
             errorMsg += " get(" + i + ") value returned: " + v + "\n";
             errorMsg += " expected value: " + i + "\n";
@@ -154,7 +162,7 @@ public class LinkedListDequeTest {
     @Test
     /* Check if equals function returns true for same address object. */
     public void equalsItselfTest() {
-        LinkedListDeque<Integer> lld = new LinkedListDeque<>();
+        ArrayDeque<Integer> lld = new ArrayDeque<>();
         lld.addLast(3);
 
         assertTrue("Should return true when deque compared with itself", lld.equals(lld));
@@ -163,10 +171,10 @@ public class LinkedListDequeTest {
     @Test
     /* Check if deque equals another deque based on their contents. */
     public void equalsTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
-        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
-        LinkedListDeque<String> lld3 = new LinkedListDeque<>();
-        ArrayDeque<Integer> ad = new ArrayDeque<>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        ArrayDeque<String> lld3 = new ArrayDeque<>();
+        LinkedListDeque<Integer> ad = new LinkedListDeque<>();
         for(int i=0; i<100000; i++){
             lld1.addLast(i);
             lld2.addLast(i);
@@ -177,7 +185,7 @@ public class LinkedListDequeTest {
         lld2.removeLast();
         assertTrue("Should return true when equals is called on " +
                 "types implementing Deque interface.", lld1.equals(ad));
-        assertFalse("Should return false when equals is called on LinkedListDeque type object containing " +
+        assertFalse("Should return false when equals is called on ArrayDeque type object containing " +
                 " different type of data.", lld1.equals(lld3));
         assertFalse("Should return false when equals is called on another Deque with different contents.", lld1.equals(lld2));
     }
@@ -185,18 +193,18 @@ public class LinkedListDequeTest {
     @Test
     /* Check if deque equals another deque based on their contents. */
     public void dogDequeEqualsTest() {
-        LinkedListDeque<TestDog> lld1 = new LinkedListDeque<>();
-        LinkedListDeque<TestDog> lld2= new LinkedListDeque<>();
+        ArrayDeque<ArrayDequeTest.TestDog> lld1 = new ArrayDeque<>();
+        ArrayDeque<ArrayDequeTest.TestDog> lld2= new ArrayDeque<>();
         for(int i=0; i<100000; i++){
-            lld1.addLast(new TestDog("Test1", i));
-            lld2.addLast(new TestDog("Test2", i));
+            lld1.addLast(new ArrayDequeTest.TestDog("Test1", i));
+            lld2.addLast(new ArrayDequeTest.TestDog("Test2", i));
         }
         assertTrue("Should return true when equals is called on another Deque with same contents.", lld1.equals(lld2));
         lld2.removeLast();
         assertFalse("Should return false when equals is called on another Deque with different contents.", lld1.equals(lld2));
     }
 
-    /** Private class for testing LinkedListDeque.equals implementation. */
+    /** Private class for testing ArrayDeque.equals implementation. */
     private static class TestDog {
         public String name;
         public int age;
@@ -208,8 +216,8 @@ public class LinkedListDequeTest {
 
         @Override
         public boolean equals(Object d){
-            if(d instanceof TestDog) {
-                return this.age == ((TestDog) d).age;
+            if(d instanceof ArrayDequeTest.TestDog) {
+                return this.age == ((ArrayDequeTest.TestDog) d).age;
             }
             return false;
         }
@@ -218,15 +226,36 @@ public class LinkedListDequeTest {
     @Test
     /* Test iterator implementation */
     public void iteratorTest() {
-        LinkedListDeque<String> sad = new LinkedListDeque<>();
-        for (int i=0; i < 26; i++) {
-            sad.addLast(Integer.toString(i));
-        }
+      ArrayDeque<String> sad = new ArrayDeque<>();
+      for (int i=0; i < 26; i++) {
+          sad.addLast(Integer.toString(i));
+      }
 
-        for (String s: sad) {
-            System.out.print(s + " ");
+      for (String s: sad) {
+          System.out.print(s + " ");
+      }
+      System.out.println();
+      sad.printDeque();
+    }
+
+    @Test
+    public void bigInsertionRemovalTest() {
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+        for (int i = 0; i < 100000; i++) {
+            if (i%4 == 0) {
+                ad.addLast(i);
+                ad.removeFirst();
+            } else if (i%4 == 1) {
+                ad.addFirst(i);
+                ad.removeFirst();
+            } else if (i%4 == 2) {
+                ad.addLast(i);
+                ad.removeLast();
+            } else {
+                ad.addFirst(i);
+                ad.removeLast();
+            }
+            assertTrue("Expected isEmpty to return true", ad.isEmpty());
         }
-        System.out.println();
-        sad.printDeque();
     }
 }
