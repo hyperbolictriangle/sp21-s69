@@ -28,10 +28,10 @@ public class TimeAList {
         int mul = 1;
         Stopwatch time = new Stopwatch();
         AList<Integer> lst = new AList<>();
-        for (int i = 1; i <= 10000000; i++) {
+        for (int i = 1; i <= 128000; i++) {
             lst.addLast(i);
 
-            if (i == mul * 1000 || i == 10000000) {
+            if (i == mul * 1000) {
                Ns.addLast(i);
                opCounts.addLast(i);
                times.addLast(time.elapsedTime());
